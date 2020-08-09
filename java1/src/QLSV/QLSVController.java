@@ -46,6 +46,7 @@ public class QLSVController {
 
     //bắt sự kiện nút chức năng
     public void init() {
+        ShowTable(model.getDssv());
         ///Nút thêm
         view.getBtn_them().addActionListener((x) -> {
             try {
