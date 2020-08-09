@@ -8,6 +8,13 @@ import java.util.LinkedList;
 
 public class QLSVModel {
 
+    public static enum find {
+        ma,
+        ten,
+        khoa,
+        lop
+    }
+
     public LinkedList<SinhVien> getDssv() {
         return getAllEbook();
     }
@@ -62,27 +69,43 @@ public class QLSVModel {
         return rs.next();
     }
 
-    public LinkedList<SinhVien> find(String maSV) throws SQLException {
+    public LinkedList<SinhVien> find(String name,find f) throws SQLException {
         LinkedList<SinhVien> dssvTemp = new LinkedList<>();
 
-        String sql = "select * from sinhvien where maSV = " + maSV;
+        String sql = "";
+        switch (f) {
+            case ma:
+                sql = "select * from sinhvien where masv = " + name;
+                break;
+            case ten:
+                sql = "select * from sinhvien where hoten = " + name;
+                break;
+            case khoa:
+                sql = "select * from sinhvien where khoa = " + name;
+                break;
+            case lop:
+                sql = "select * from sinhvien where lop = " + name;
+                break;
+        }
+
         ResultSet rs = DataBaseUtil.getData(sql);
-        rs.next();
-        String id = rs.getString(1);
-        String name = rs.getString(2);
-        String gioiTinh = rs.getString(3);
-        Date d = rs.getDate(4);
-        String khoa = rs.getString(5);
-        String lop = rs.getString(6);
-        String email = rs.getString(7);
-        String sdt = rs.getString(8);
-        String diaChi = rs.getString(9);
-        dssvTemp.add(new SinhVien(id, name, gioiTinh, d, khoa, lop, email, sdt, diaChi));
+        while (rs.next()) {
+            String id = rs.getString(1);
+            String hoten = rs.getString(2);
+            String gioiTinh = rs.getString(3);
+            Date d = rs.getDate(4);
+            String khoa = rs.getString(5);
+            String lop = rs.getString(6);
+            String email = rs.getString(7);
+            String sdt = rs.getString(8);
+            String diaChi = rs.getString(9);
+            dssvTemp.add(new SinhVien(id, hoten, gioiTinh, d, khoa, lop, email, sdt, diaChi));
+        }
 
         return dssvTemp;
     }
-    
-    public void remove(String maSV) throws SQLException{
+
+    public void remove(String maSV) throws SQLException {
         String sql = "delete from sinhvien where masv=" + maSV;
         DataBaseUtil.setData(sql);
     }

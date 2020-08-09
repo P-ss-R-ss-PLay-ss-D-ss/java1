@@ -78,7 +78,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace type="separate" pref="68" max="32767" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" attributes="0">
@@ -103,14 +103,31 @@
                           <Component id="email" alignment="0" min="-2" pref="83" max="-2" attributes="0"/>
                           <Component id="btn_Tim" alignment="0" min="-2" pref="83" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txt_Tim" min="-2" pref="230" max="-2" attributes="0"/>
-                          <Component id="txt_Email" min="-2" pref="230" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="txt_Email" min="-2" pref="230" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="txt_Tim" max="32767" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="comboTimKiem" min="-2" pref="76" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="126" max="-2" attributes="0"/>
+                              <Component id="jLabel2" min="-2" pref="155" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
+          </Group>
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="415" max="-2" attributes="0"/>
+              <Component id="jLabel1" min="-2" pref="262" max="-2" attributes="0"/>
+              <EmptySpace pref="361" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
@@ -120,11 +137,6 @@
               <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
               <Component id="btn_Xoa" min="-2" pref="83" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="339" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="-2" pref="415" max="-2" attributes="0"/>
-              <Component id="jLabel1" min="-2" pref="262" max="-2" attributes="0"/>
-              <EmptySpace pref="361" max="32767" attributes="0"/>
           </Group>
           <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
@@ -204,22 +216,25 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btn_Tim" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="txt_DC" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="diaChi" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="txt_DC" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                      <Component id="diaChi" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="jLabel2" min="-2" pref="14" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btn_them" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                          <Component id="btn_Sua" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
-                          <Component id="btn_Xoa" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                          <Component id="btn_Tim" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
+                          <Component id="txt_Tim" alignment="3" pref="37" max="32767" attributes="0"/>
+                          <Component id="comboTimKiem" alignment="3" min="-2" pref="38" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="txt_Tim" min="-2" pref="35" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btn_them" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="btn_Sua" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
+                  <Component id="btn_Xoa" alignment="3" min="-2" pref="35" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="258" max="-2" attributes="0"/>
@@ -529,6 +544,29 @@
           <ComponentRef name="grGioiTInh"/>
         </Property>
         <Property name="text" type="java.lang.String" value="N&#x1eef;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboTimKiem">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="M&#xe3;"/>
+            <StringItem index="1" value="T&#xea;n"/>
+            <StringItem index="2" value="Khoa"/>
+            <StringItem index="3" value="L&#x1edb;p"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboTimKiemActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel2">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="T&#xec;m ki&#x1ebf;m theo:"/>
       </Properties>
     </Component>
   </SubComponents>

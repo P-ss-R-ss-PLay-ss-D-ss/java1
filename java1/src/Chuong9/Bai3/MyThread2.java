@@ -1,6 +1,7 @@
-
 package Chuong9.Bai3;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyThread2 {
 
@@ -12,7 +13,7 @@ public class MyThread2 {
                 for (int i = 1; i <= n; i++) {
                     System.out.printf("[%d]", i);
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(500);
                     } catch (InterruptedException ex) {
                     }
                 }
@@ -23,19 +24,18 @@ public class MyThread2 {
             @Override
             public void run() {
                 for (int i = 1; i <= n; i++) {
-                    System.out.printf("(%d)", i * i);
+                    System.out.printf("->(%d)", i * i);
                     System.out.println("");
                     try {
-                        Thread.sleep(100);
-
+                        thread.join(500);
                     } catch (InterruptedException ex) {
-                        System.out.println("qq");
+                        Logger.getLogger(MyThread2.class.getName()).log(Level.SEVERE, null, ex);
                     }
-
                 }
-
             }
         };
+        thread.setPriority(10);
+        threadTwo.setPriority(1);
         thread.start();
         threadTwo.start();
     }

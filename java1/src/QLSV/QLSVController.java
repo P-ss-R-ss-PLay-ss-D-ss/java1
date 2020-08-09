@@ -63,6 +63,7 @@ public class QLSVController {
         });
         //Nút Tìm
         view.getBtn_Tim().addActionListener((e) -> {
+            System.out.println(view.getComboTimKiem().getSelectedItem());
             String maCanTim = view.getTxt_Tim().getText();
             //cmt vô đây
             if (maCanTim.equals("")) {
@@ -71,7 +72,7 @@ public class QLSVController {
 
             LinkedList<SinhVien> mhs = new LinkedList<>();
             try {
-                mhs = model.find(maCanTim);
+                mhs = model.find(maCanTim,QLSVModel.find.ma);
             } catch (SQLException ex) {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -102,9 +103,10 @@ public class QLSVController {
     }
 
     //Thêm sinh viên
-    public SinhVien AddSV(QLSVView view) {
+    public SinhVien AddSV(QLSVView view) throws SQLException {
         Border nhapSai = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
-          Border nhapDung = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
+        Border nhapDung = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
+
         String maSV = view.getTxt_msv().getText();
         String tenSV = view.getTxt_hoTen().getText();
         String gioiTinh = view.isGioiTinhNam() ? "Nam" : "Nu";
@@ -116,7 +118,7 @@ public class QLSVController {
         String sDT = view.getTxt_SDT().getText();
 
         //điều kiện-------------
-        if (maSV.equals("")) {
+        if (maSV.equals("") || model.checkTrungMa(maSV)) {
             //code chỉnh border
             view.getTxt_msv().setBorder(nhapSai);
         }
@@ -130,12 +132,8 @@ public class QLSVController {
         if (diaChi.equals("")) {
             view.getTxt_DC().setBorder(nhapSai);
         }
-        if ("".equals(email)) {
-            view.getTxt_Email().setText("");
-        } else {
-            if (validate_email(email) == false) {
-                view.getTxt_Email().setBorder(nhapSai);
-            }
+        if (!validate_email(email)) {
+            view.getTxt_Email().setBorder(nhapSai);
         }
         if (khoa.equals("")) {
             view.getTxt_Khoa().setBorder(nhapSai);
@@ -146,19 +144,19 @@ public class QLSVController {
         if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11)) {
             view.getTxt_SDT().setBorder(nhapSai);
         }
-        if (model.CheckTrungMa(model, maSV)) {
-            view.getTxt_msv().setBorder(nhapSai);
-
-        }
         //ghi code vô đây
         //
         boolean bl1 = maSV.equals("") || tenSV.equals("") || ngaySinh.equals("") || checkNgaySinh(ngaySinh) == false || diaChi.equals("") || khoa.equals("") || lop.equals("");
-        boolean bl2 = validate_SDT(sDT) == false || (sDT.length() != 10 && sDT.length() != 11) || model.CheckTrungMa(model, maSV);
+        boolean bl2 = validate_SDT(sDT) == false || (sDT.length() != 10 && sDT.length() != 11) || model.checkTrungMa(maSV) || !validate_email(email);
         if (!(bl1 || bl2)) {
-            Date d = new Date(ngaySinh);
+            Date d = new Date();
+            try {
+                d = new Date(ngaySinh);
+            } catch (Exception e) {
+                return null;
+            }
 
             return new SinhVien(maSV, tenSV, gioiTinh, d, khoa, lop, email, sDT, diaChi);
-
         } else {
             return null;
         }
@@ -174,7 +172,7 @@ public class QLSVController {
         view.getTxt_SDT().setText("");
         view.getTxt_Tim().setText("");
         view.getTxt_hoTen().setText("");
-        
+
     }
 
     private static final Pattern VALID_SDT_REGEX
