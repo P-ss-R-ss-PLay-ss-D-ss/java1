@@ -18,7 +18,7 @@ public class QLSVModel {
     public LinkedList<SinhVien> getAllEbook() {
         LinkedList<SinhVien> svs = new LinkedList<>();
         try {
-            String sql = "select * from books";
+            String sql = "select * from sinhvien";
             ResultSet rs = DataBaseUtil.getData(sql);
 
             while (rs.next()) {
@@ -50,14 +50,14 @@ public class QLSVModel {
         String email = sinhVien.getEmail();
         String sdt = sinhVien.getsDT();
         String diaChi = sinhVien.getDiaChi();
-        SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
-        String sql = "insert into qlsv values(" + id + ",'" + name + "','" + gioiTinh + "'," + ft.format(d) + "," + khoa + "," + lop + "," + email + "," + sdt + "," + diaChi + ")";
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+        String sql = "insert into sinhvien values('" + id + "','" + name + "','" + gioiTinh + "','" + ft.format(d) + "','" + khoa + "','" + lop + "','" + email + "','" + sdt + "','" + diaChi + "')";
         return DataBaseUtil.setData(sql);
     }
 
     //check trùng mã
     public boolean checkTrungMa(String maSV) throws SQLException {
-        String sql = "select * from books where id = " + maSV;
+        String sql = "select * from sinhvien where masv = " + maSV;
         ResultSet rs = DataBaseUtil.getData(sql);
         return rs.next();
     }
@@ -65,7 +65,7 @@ public class QLSVModel {
     public LinkedList<SinhVien> find(String maSV) throws SQLException {
         LinkedList<SinhVien> dssvTemp = new LinkedList<>();
 
-        String sql = "select * from books where maSV = " + maSV;
+        String sql = "select * from sinhvien where maSV = " + maSV;
         ResultSet rs = DataBaseUtil.getData(sql);
         rs.next();
         String id = rs.getString(1);
@@ -83,7 +83,7 @@ public class QLSVModel {
     }
     
     public void remove(String maSV) throws SQLException{
-        String sql = "delete from books where id=" + maSV;
+        String sql = "delete from sinhvien where masv=" + maSV;
         DataBaseUtil.setData(sql);
     }
 }
