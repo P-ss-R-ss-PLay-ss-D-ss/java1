@@ -106,7 +106,6 @@ public class QLSVController {
     public SinhVien AddSV(QLSVView view) throws SQLException {
         Border nhapSai = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
         Border nhapDung = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
-
         String maSV = view.getTxt_msv().getText();
         String tenSV = view.getTxt_hoTen().getText();
         String gioiTinh = view.isGioiTinhNam() ? "Nam" : "Nu";
@@ -132,7 +131,7 @@ public class QLSVController {
         if (diaChi.equals("")) {
             view.getTxt_DC().setBorder(nhapSai);
         }
-        if (!validate_email(email)) {
+        if (model.checkEmail(email) || !validate_email(email)) {
             view.getTxt_Email().setBorder(nhapSai);
         }
         if (khoa.equals("")) {
@@ -141,21 +140,21 @@ public class QLSVController {
         if (lop.equals("")) {
             view.getTxt_Lop().setBorder(nhapSai);
         }
-        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11)) {
+        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11) || model.checkSDT(sDT)) {
             view.getTxt_SDT().setBorder(nhapSai);
+        }
+        if (model.checkTrungMa(maSV)) {
+            view.getTxt_msv().setBorder(nhapSai);
+        } else {
         }
         //ghi code vô đây
         //
-        boolean bl1 = maSV.equals("") || tenSV.equals("") || ngaySinh.equals("") || checkNgaySinh(ngaySinh) == false || diaChi.equals("") || khoa.equals("") || lop.equals("");
-        boolean bl2 = validate_SDT(sDT) == false || (sDT.length() != 10 && sDT.length() != 11) || model.checkTrungMa(maSV) || !validate_email(email);
-        if (!(bl1 || bl2)) {
-            Date d = new Date();
-            try {
-                d = new Date(ngaySinh);
-            } catch (Exception e) {
-                return null;
-            }
-
+        boolean bl1 = maSV.equals("") || tenSV.equals("") || ngaySinh.equals("") || checkNgaySinh(ngaySinh) == false;
+        boolean bl2 = validate_SDT(sDT) == false || (sDT.length() != 10 && sDT.length() != 11) || model.checkTrungMa(maSV);
+        boolean bl3 = diaChi.equals("") || khoa.equals("") || lop.equals("") || model.checkEmail(email) || !validate_email(email);
+        if (!(bl1 || bl2 || bl3)) {
+            Date d = new Date(ngaySinh);
+            setSuccess();
             return new SinhVien(maSV, tenSV, gioiTinh, d, khoa, lop, email, sDT, diaChi);
         } else {
             return null;

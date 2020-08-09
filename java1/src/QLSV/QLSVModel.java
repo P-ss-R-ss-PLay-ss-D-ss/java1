@@ -16,13 +16,13 @@ public class QLSVModel {
     }
 
     public LinkedList<SinhVien> getDssv() {
-        return getAllEbook();
+        return getAllStudents();
     }
 
     public QLSVModel() {
     }
 
-    public LinkedList<SinhVien> getAllEbook() {
+    public LinkedList<SinhVien> getAllStudents() {
         LinkedList<SinhVien> svs = new LinkedList<>();
         try {
             String sql = "select * from sinhvien";
@@ -68,7 +68,20 @@ public class QLSVModel {
         ResultSet rs = DataBaseUtil.getData(sql);
         return rs.next();
     }
-
+    
+    //check email
+     public boolean checkEmail(String email) throws SQLException {
+        String sql = "select * from sinhvien where email = '" + email+"';";
+        ResultSet rs = DataBaseUtil.getData(sql);
+        return rs.next();
+    }
+    //check sdt
+     public boolean checkSDT(String sDT) throws SQLException {
+        String sql = "select * from sinhvien where sdt = '" + sDT+"';";
+        ResultSet rs = DataBaseUtil.getData(sql);
+        return rs.next();
+    }
+    //Tìm theo  mã sinh viên
     public LinkedList<SinhVien> find(String name,find f) throws SQLException {
         LinkedList<SinhVien> dssvTemp = new LinkedList<>();
 
