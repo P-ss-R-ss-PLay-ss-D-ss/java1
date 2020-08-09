@@ -54,6 +54,7 @@ public class QLSVView extends javax.swing.JFrame {
         checkNu = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Quản Lý Sinh Viên");
         setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         setLocation(new java.awt.Point(150, 20));
         setResizable(false);
@@ -226,9 +227,9 @@ public class QLSVView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_them, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
+                .addGap(73, 73, 73)
                 .addComponent(btn_Sua, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
+                .addGap(67, 67, 67)
                 .addComponent(btn_Xoa, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(339, 339, 339))
             .addGroup(layout.createSequentialGroup()

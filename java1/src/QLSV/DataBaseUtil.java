@@ -17,7 +17,6 @@ public class DataBaseUtil {
     public static String username = "root";
     public static String password = "";
     
-
     public static Connection GetConnection() throws SQLException {
         if (c==null) {
             c = DriverManager.getConnection(url, username, password);
