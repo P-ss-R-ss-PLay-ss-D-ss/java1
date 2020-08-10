@@ -20,6 +20,9 @@ public class QLSVController {
     private QLSVModel model;
     private QLSVView view;
 
+    Border nhapSai = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
+    Border nhapDung = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
+
     //properties
     public QLSVModel getModel() {
         return model;
@@ -38,6 +41,7 @@ public class QLSVController {
     public QLSVController(QLSVModel model, QLSVView view) {
         this.model = model;
         this.view = view;
+        this.view.setVisible(true);
 
         init();
 
@@ -55,6 +59,17 @@ public class QLSVController {
                 if (sv == null) {
                     return;
                 }
+
+                if (model.checkSDT(sv.getSDT())) {
+                    view.getTxt_SDT().setBorder(nhapSai);
+                    return;
+                }
+
+                if (model.checkTrungMa(sv.getMaSV())) {
+                    view.getTxt_msv().setBorder(nhapSai);
+                    return;
+                }
+
                 model.add(sv);
                 ShowTable(model.getDssv());
             } catch (SQLException ex) {
@@ -63,7 +78,23 @@ public class QLSVController {
         });
         //Nút Tìm
         view.getBtn_Tim().addActionListener((e) -> {
-            System.out.println(view.getComboTimKiem().getSelectedItem());
+            QLSVModel.find f = QLSVModel.find.ma;
+
+            switch (view.getComboTimKiem().getSelectedItem().toString()) {
+                case "Mã":
+                    f = QLSVModel.find.ma;
+                    break;
+                case "Khoa":
+                    f = QLSVModel.find.khoa;
+                    break;
+                case "Lớp":
+                    f = QLSVModel.find.lop;
+                    break;
+                case "Tên":
+                    f = QLSVModel.find.ten;
+                    break;
+            }
+
             String maCanTim = view.getTxt_Tim().getText();
             //cmt vô đây
             if (maCanTim.equals("")) {
@@ -72,7 +103,7 @@ public class QLSVController {
 
             LinkedList<SinhVien> mhs = new LinkedList<>();
             try {
-                mhs = model.find(maCanTim,QLSVModel.find.ma);
+                mhs = model.find(maCanTim, f);
             } catch (SQLException ex) {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -82,6 +113,56 @@ public class QLSVController {
             }
 
             ShowTable(mhs);
+        });
+        view.getBtnXemTatCa().addActionListener((x) -> {
+            ShowTable(model.getDssv());
+        });
+        view.getBtn_Sua().addActionListener((x) -> {
+            int row = view.getTb_SV().getSelectedRow();
+            SinhVien s = new SinhVien();
+            if (row != -1) {
+                setSuccess(nhapDung);
+                try {
+                    s = model.find(view.getTb_SV().getValueAt(row, 0).toString(), QLSVModel.find.ma).getFirst();
+                } catch (SQLException ex) {
+                    Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                SimpleDateFormat ft = new SimpleDateFormat("yyyy/MM/dd");
+
+                view.getTxt_msv().setText(s.getMaSV());
+                view.getTxt_hoTen().setText(s.getHoTen());
+                view.getTxt_DC().setText(s.getDiaChi());
+                view.getTxt_Email().setText(s.getEmail());
+                view.getTxt_Khoa().setText(s.getKhoa());
+                view.getTxt_Lop().setText(s.getLop());
+                view.getTxt_NS().setText(ft.format(s.getNgaySinh()));
+                view.getTxt_SDT().setText(s.getSDT());
+                if (s.getGioiTinh().equals("nam")) {
+                    view.getGrGioiTinh().setSelected(view.getCheckNam().getModel(), true);
+                } else {
+                    view.getGrGioiTinh().setSelected(view.getCheckNu().getModel(), true);
+                }
+                view.getTb_SV().clearSelection();
+            } else {
+                SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
+                try {
+                    model.update(AddSV(view));
+                } catch (SQLException ex) {
+                    Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ShowTable(model.getDssv());
+            }
+        });
+        view.getBtn_Xoa().addActionListener((e) -> {
+            int row = view.getTb_SV().getSelectedRow();
+            if (row != -1) {
+                try {
+                    model.remove(view.getTb_SV().getValueAt(row, 0).toString());
+                } catch (SQLException ex) {
+                    Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            ShowTable(model.getDssv());
         });
     }
 
@@ -96,7 +177,7 @@ public class QLSVController {
             SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
             table.addRow(new Object[]{sv.getMaSV(), sv.getHoTen(), sv.getGioiTinh(),
                 ft.format(sv.getNgaySinh()), sv.getKhoa(), sv.getLop(),
-                sv.getDiaChi(), sv.getsDT(), sv.getEmail()});
+                sv.getDiaChi(), sv.getSDT(), sv.getEmail()});
         });
 
         view.getTb_SV().setModel(table);
@@ -104,11 +185,10 @@ public class QLSVController {
 
     //Thêm sinh viên
     public SinhVien AddSV(QLSVView view) throws SQLException {
-        Border nhapSai = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.red);
-        Border nhapDung = BorderFactory.createMatteBorder(1, 1, 1, 1, Color.BLACK);
+
         String maSV = view.getTxt_msv().getText();
         String tenSV = view.getTxt_hoTen().getText();
-        String gioiTinh = view.isGioiTinhNam() ? "Nam" : "Nu";
+        String gioiTinh = view.isGioiTinhNam() ? "nam" : "nu";
         String ngaySinh = view.getTxt_NS().getText();
         String diaChi = view.getTxt_DC().getText();
         String email = view.getTxt_Email().getText();
@@ -118,50 +198,59 @@ public class QLSVController {
 
         //điều kiện-------------
         if (maSV.equals("") || model.checkTrungMa(maSV)) {
-            //code chỉnh border
             view.getTxt_msv().setBorder(nhapSai);
+        } else {
+            view.getTxt_msv().setBorder(nhapDung);
         }
         if (tenSV.equals("")) {
             view.getTxt_hoTen().setBorder(nhapSai);
+        } else {
+            view.getTxt_hoTen().setBorder(nhapDung);
         }
         //NgaySinh
         if (ngaySinh.equals("") || checkNgaySinh(ngaySinh) == false) {
             view.getTxt_NS().setBorder(nhapSai);
+        } else {
+            view.getTxt_NS().setBorder(nhapDung);
         }
         if (diaChi.equals("")) {
             view.getTxt_DC().setBorder(nhapSai);
+        } else {
+            view.getTxt_DC().setBorder(nhapDung);
         }
         if (model.checkEmail(email) || !validate_email(email)) {
             view.getTxt_Email().setBorder(nhapSai);
+        } else {
+            view.getTxt_Email().setBorder(nhapDung);
         }
         if (khoa.equals("")) {
             view.getTxt_Khoa().setBorder(nhapSai);
         }
         if (lop.equals("")) {
             view.getTxt_Lop().setBorder(nhapSai);
-        }
-        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11) || model.checkSDT(sDT)) {
-            view.getTxt_SDT().setBorder(nhapSai);
-        }
-        if (model.checkTrungMa(maSV)) {
-            view.getTxt_msv().setBorder(nhapSai);
         } else {
+            view.getTxt_Lop().setBorder(nhapDung);
+        }
+        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11)) {
+            view.getTxt_SDT().setBorder(nhapSai);
+        } else {
+            view.getTxt_SDT().setBorder(nhapDung);
         }
         //ghi code vô đây
         //
-        boolean bl1 = maSV.equals("") || tenSV.equals("") || ngaySinh.equals("") || checkNgaySinh(ngaySinh) == false;
-        boolean bl2 = validate_SDT(sDT) == false || (sDT.length() != 10 && sDT.length() != 11) || model.checkTrungMa(maSV);
-        boolean bl3 = diaChi.equals("") || khoa.equals("") || lop.equals("") || model.checkEmail(email) || !validate_email(email);
-        if (!(bl1 || bl2 || bl3)) {
+        boolean bl1 = !maSV.equals("") && !tenSV.equals("") && !ngaySinh.equals("") && checkNgaySinh(ngaySinh);
+        boolean bl2 = validate_SDT(sDT) && (sDT.length() == 10 || sDT.length() == 11);
+        boolean bl3 = !diaChi.equals("") && !khoa.equals("") && !lop.equals("") && validate_email(email);
+        if (bl1 && bl2 && bl3) {
             Date d = new Date(ngaySinh);
-            setSuccess();
+            setSuccess(nhapDung);
             return new SinhVien(maSV, tenSV, gioiTinh, d, khoa, lop, email, sDT, diaChi);
         } else {
             return null;
         }
     }
 
-    private void setSuccess() {
+    private void setSuccess(Border b) {
         view.getTxt_msv().setText("");
         view.getTxt_DC().setText("");
         view.getTxt_Email().setText("");
@@ -171,7 +260,15 @@ public class QLSVController {
         view.getTxt_SDT().setText("");
         view.getTxt_Tim().setText("");
         view.getTxt_hoTen().setText("");
-
+        view.getTxt_msv().setBorder(b);
+        view.getTxt_DC().setBorder(b);
+        view.getTxt_Email().setBorder(b);
+        view.getTxt_Khoa().setBorder(b);
+        view.getTxt_Lop().setBorder(b);
+        view.getTxt_NS().setBorder(b);
+        view.getTxt_SDT().setBorder(b);
+        view.getTxt_Tim().setBorder(b);
+        view.getTxt_hoTen().setBorder(b);
     }
 
     private static final Pattern VALID_SDT_REGEX
@@ -199,7 +296,7 @@ public class QLSVController {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         QLSVController qlsvController = new QLSVController(new QLSVModel(), new QLSVView());
     }
 }

@@ -81,7 +81,7 @@ public class SinhVien {
         this.email = email;
     }
 
-    public String getsDT() {
+    public String getSDT() {
         return sDT;
     }
 

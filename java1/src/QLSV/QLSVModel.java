@@ -22,7 +22,7 @@ public class QLSVModel {
     public QLSVModel() {
     }
 
-    public LinkedList<SinhVien> getAllStudents() {
+    private LinkedList<SinhVien> getAllStudents() {
         LinkedList<SinhVien> svs = new LinkedList<>();
         try {
             String sql = "select * from sinhvien";
@@ -55,10 +55,10 @@ public class QLSVModel {
         String khoa = sinhVien.getKhoa();
         String lop = sinhVien.getLop();
         String email = sinhVien.getEmail();
-        String sdt = sinhVien.getsDT();
+        String sdt = sinhVien.getSDT();
         String diaChi = sinhVien.getDiaChi();
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-        String sql = "insert into sinhvien values('" + id + "','" + name + "','" + gioiTinh + "','" + ft.format(d) + "','" + khoa + "','" + lop + "','" + email + "','" + sdt + "','" + diaChi + "')";
+        String sql = "insert into sinhvien values('" + id + "',N'" + name + "','" + gioiTinh + "','" + ft.format(d) + "','" + khoa + "','" + lop + "','" + email + "','" + sdt + "',N'" + diaChi + "')";
         return DataBaseUtil.setData(sql);
     }
 
@@ -68,36 +68,38 @@ public class QLSVModel {
         ResultSet rs = DataBaseUtil.getData(sql);
         return rs.next();
     }
-    
+
     //check email
-     public boolean checkEmail(String email) throws SQLException {
-        String sql = "select * from sinhvien where email = '" + email+"';";
+    public boolean checkEmail(String email) throws SQLException {
+        String sql = "select * from sinhvien where email = '" + email + "';";
         ResultSet rs = DataBaseUtil.getData(sql);
         return rs.next();
     }
+
     //check sdt
-     public boolean checkSDT(String sDT) throws SQLException {
-        String sql = "select * from sinhvien where sdt = '" + sDT+"';";
+    public boolean checkSDT(String sDT) throws SQLException {
+        String sql = "select * from sinhvien where sdt = '" + sDT + "';";
         ResultSet rs = DataBaseUtil.getData(sql);
         return rs.next();
     }
+
     //Tìm theo  mã sinh viên
-    public LinkedList<SinhVien> find(String name,find f) throws SQLException {
+    public LinkedList<SinhVien> find(String name, find f) throws SQLException {
         LinkedList<SinhVien> dssvTemp = new LinkedList<>();
 
         String sql = "";
         switch (f) {
             case ma:
-                sql = "select * from sinhvien where masv = " + name;
+                sql = "select * from sinhvien where masv = '" + name + "'";
                 break;
             case ten:
-                sql = "select * from sinhvien where hoten = " + name;
+                sql = "select * from sinhvien where hoten like '%" + name + "%'";
                 break;
             case khoa:
-                sql = "select * from sinhvien where khoa = " + name;
+                sql = "select * from sinhvien where khoa = '" + name + "'";
                 break;
             case lop:
-                sql = "select * from sinhvien where lop = " + name;
+                sql = "select * from sinhvien where lop = '" + name + "'";
                 break;
         }
 
@@ -119,7 +121,17 @@ public class QLSVModel {
     }
 
     public void remove(String maSV) throws SQLException {
-        String sql = "delete from sinhvien where masv=" + maSV;
+        String sql = "delete from sinhvien where masv='" + maSV + "'";
         DataBaseUtil.setData(sql);
+    }
+
+    public int update(SinhVien sv) throws SQLException {
+        String sql;
+        if (checkTrungMa(sv.getMaSV())) {
+            SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+            sql = String.format("update sinhvien set masv='%s',hoten='%s',gioitinh='%s',ngaysinh='%s',khoa='%s',lop='%s',email='%s',sdt='%s',diachi='%s' where masv='%s'", sv.getMaSV(), sv.getHoTen(), sv.getGioiTinh(), ft.format(sv.getNgaySinh()), sv.getKhoa(), sv.getLop(), sv.getEmail(), sv.getSDT(), sv.getDiaChi(), sv.getMaSV());
+            return DataBaseUtil.setData(sql);
+        }
+        return -1;
     }
 }
