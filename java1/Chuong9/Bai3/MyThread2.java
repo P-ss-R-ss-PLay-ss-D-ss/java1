@@ -13,7 +13,8 @@ public class MyThread2 {
                 for (int i = 1; i <= n; i++) {
                     System.out.printf("[%d]", i);
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(490);
+                        
                     } catch (InterruptedException ex) {
                     }
                 }
