@@ -7,7 +7,8 @@ import java.util.Date;
 import java.util.LinkedList;
 
 public class QLSVModel {
-
+    
+    //danh sách lựa chọn tìm kiếm
     public static enum find {
         ma,
         ten,
@@ -21,13 +22,13 @@ public class QLSVModel {
 
     public QLSVModel() {
     }
-
+    //lấy dữ liệu sinh viên từ database
     private LinkedList<SinhVien> getAllStudents() {
         LinkedList<SinhVien> svs = new LinkedList<>();
         try {
             String sql = "select * from sinhvien";
             ResultSet rs = DataBaseUtil.getData(sql);
-
+            
             while (rs.next()) {
                 String id = rs.getString(1);
                 String name = rs.getString(2);
@@ -119,12 +120,13 @@ public class QLSVModel {
 
         return dssvTemp;
     }
-
+    
+    //Xoá sinh viên theo mã
     public void remove(String maSV) throws SQLException {
         String sql = "delete from sinhvien where masv='" + maSV + "'";
         DataBaseUtil.setData(sql);
     }
-
+    //Cập nhật sinh viên 
     public int update(SinhVien sv) throws SQLException {
         String sql;
         if (checkTrungMa(sv.getMaSV())) {

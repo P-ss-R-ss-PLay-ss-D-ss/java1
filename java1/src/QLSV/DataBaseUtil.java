@@ -16,7 +16,7 @@ public class DataBaseUtil {
     public static String url = "jdbc:mysql://localhost:3306/qlsv?characterEncoding=latin1&useConfigs=maxPerformance&useUnicode=true&characterEncoding=UTF-8";
     public static String username = "root";
     public static String password = "";
-    
+    // kết nối database
     public static Connection GetConnection() throws SQLException {
         if (c==null) {
             c = DriverManager.getConnection(url, username, password);   
@@ -24,6 +24,7 @@ public class DataBaseUtil {
         }
         return c;
     }
+    
     public static int setData(String sql) throws SQLException{
         return GetConnection().createStatement().executeUpdate(sql);
     }

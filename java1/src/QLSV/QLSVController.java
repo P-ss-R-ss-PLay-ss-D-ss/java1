@@ -32,7 +32,7 @@ public class QLSVController {
         return view;
     }
 
-    //ocnstructor
+    //constructors
     public QLSVController() {
         model = new QLSVModel();
         view = new QLSVView();
@@ -55,22 +55,22 @@ public class QLSVController {
         view.getBtn_them().addActionListener((x) -> {
             try {
                 SinhVien sv = AddSV(view);
-                //cmt vô đây
                 if (sv == null) {
                     return;
                 }
-
+                //check số đt
                 if (model.checkSDT(sv.getSDT())) {
                     view.getTxt_SDT().setBorder(nhapSai);
                     return;
                 }
-
+                //check trùng mã
                 if (model.checkTrungMa(sv.getMaSV())) {
                     view.getTxt_msv().setBorder(nhapSai);
                     return;
                 }
-
+                // thêm sinh viên
                 model.add(sv);
+                //hiện dữ liệu trên bảng
                 ShowTable(model.getDssv());
             } catch (SQLException ex) {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
@@ -79,7 +79,7 @@ public class QLSVController {
         //Nút Tìm
         view.getBtn_Tim().addActionListener((e) -> {
             QLSVModel.find f = QLSVModel.find.ma;
-
+            //Tạo trường hợp lựa chọn cho việc tìm kiếm sinh viên
             switch (view.getComboTimKiem().getSelectedItem().toString()) {
                 case "Mã":
                     f = QLSVModel.find.ma;
@@ -96,28 +96,34 @@ public class QLSVController {
             }
 
             String maCanTim = view.getTxt_Tim().getText();
-            //cmt vô đây
+            // Mã rỗng
             if (maCanTim.equals("")) {
                 return;
             }
 
             LinkedList<SinhVien> mhs = new LinkedList<>();
             try {
+                //tìm mã trong database 
                 mhs = model.find(maCanTim, f);
             } catch (SQLException ex) {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //cmt vô đây
+            //Danh sách rỗng
             if (mhs.isEmpty()) {
                 return;
             }
-
+            //hiện dữ liêu tìm kiếm trên table
             ShowTable(mhs);
         });
+        
+        //Nút xem tất cả dữ liệu trong database
         view.getBtnXemTatCa().addActionListener((x) -> {
             ShowTable(model.getDssv());
         });
+        
+        //Nút sửa
         view.getBtn_Sua().addActionListener((x) -> {
+            //Lấy vị trí dòng đang chọn
             int row = view.getTb_SV().getSelectedRow();
             SinhVien s = new SinhVien();
             if (row != -1) {
@@ -137,7 +143,7 @@ public class QLSVController {
                 view.getTxt_Lop().setText(s.getLop());
                 view.getTxt_NS().setText(ft.format(s.getNgaySinh()));
                 view.getTxt_SDT().setText(s.getSDT());
-                if (s.getGioiTinh().equals("nam")) {
+                if (s.getGioiTinh().equals("Nam")) {
                     view.getGrGioiTinh().setSelected(view.getCheckNam().getModel(), true);
                 } else {
                     view.getGrGioiTinh().setSelected(view.getCheckNu().getModel(), true);
@@ -185,10 +191,10 @@ public class QLSVController {
 
     //Thêm sinh viên
     public SinhVien AddSV(QLSVView view) throws SQLException {
-
+        
         String maSV = view.getTxt_msv().getText();
         String tenSV = view.getTxt_hoTen().getText();
-        String gioiTinh = view.isGioiTinhNam() ? "nam" : "nu";
+        String gioiTinh = view.isGioiTinhNam() ? "Nam" : "Nữ";
         String ngaySinh = view.getTxt_NS().getText();
         String diaChi = view.getTxt_DC().getText();
         String email = view.getTxt_Email().getText();
@@ -236,8 +242,7 @@ public class QLSVController {
         } else {
             view.getTxt_SDT().setBorder(nhapDung);
         }
-        //ghi code vô đây
-        //
+        // kiểm tra điều kiện thêm sinh viên
         boolean bl1 = !maSV.equals("") && !tenSV.equals("") && !ngaySinh.equals("") && checkNgaySinh(ngaySinh);
         boolean bl2 = validate_SDT(sDT) && (sDT.length() == 10 || sDT.length() == 11);
         boolean bl3 = !diaChi.equals("") && !khoa.equals("") && !lop.equals("") && validate_email(email);
@@ -249,7 +254,8 @@ public class QLSVController {
             return null;
         }
     }
-
+    
+    //chỉnh lại bình thường khi thêm thành công
     private void setSuccess(Border b) {
         view.getTxt_msv().setText("");
         view.getTxt_DC().setText("");
@@ -270,23 +276,28 @@ public class QLSVController {
         view.getTxt_Tim().setBorder(b);
         view.getTxt_hoTen().setBorder(b);
     }
-
+    
+    //Định dạng chuỗi số điện thoại
     private static final Pattern VALID_SDT_REGEX
             = Pattern.compile("^[0-9]+$", Pattern.CASE_INSENSITIVE);
-
-    private static final Pattern VALID_EMAIL_ADDRESS_REGEX
+    
+    //Định dạng chuỗi email
+    private static final Pattern VALID_EMAIL_REGEX
             = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
+    
+    //check email
     public static boolean validate_email(String emailStr) {
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+        Matcher matcher = VALID_EMAIL_REGEX.matcher(emailStr);
         return matcher.find();
     }
-
+    
+    //check số điện thoại
     public static boolean validate_SDT(String sDT) {
         Matcher matcher = VALID_SDT_REGEX.matcher(sDT);
         return matcher.find();
     }
-
+    
+    //check ngày sinh
     public static boolean checkNgaySinh(String ngaySinh) {
         try {
             Date d = new Date(ngaySinh);
