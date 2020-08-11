@@ -11,11 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class DataBaseUtil {
-
-    public static Connection c;
-    public static String url = "jdbc:mysql://localhost:3306/qlsv?characterEncoding=latin1&useConfigs=maxPerformance&useUnicode=true&characterEncoding=UTF-8";
-    public static String username = "root";
-    public static String password = "";
+    
+    private static Connection c;
+    private static final String url = "jdbc:mysql://localhost:3306/qlsv?characterEncoding=latin1&useConfigs=maxPerformance&useUnicode=true&characterEncoding=UTF-8";
+    private static final String username = "root";
+    private static final String password = "";
     // kết nối database
     public static Connection GetConnection() throws SQLException {
         if (c==null) {

@@ -266,6 +266,7 @@ public class QLSVController {
         view.getTxt_SDT().setText("");
         view.getTxt_Tim().setText("");
         view.getTxt_hoTen().setText("");
+        
         view.getTxt_msv().setBorder(b);
         view.getTxt_DC().setBorder(b);
         view.getTxt_Email().setBorder(b);
