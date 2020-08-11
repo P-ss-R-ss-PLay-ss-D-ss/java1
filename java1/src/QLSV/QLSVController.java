@@ -55,21 +55,29 @@ public class QLSVController {
         ///Nút thêm
         view.getBtn_them().addActionListener((x) -> {
             try {
-                SinhVien sv = AddSV(view);
+                SinhVien sv = AddSV(view);//Thêm sinh viên vào bảng jframe
                 if (sv == null) {
                     return;
                 }
                 //check số đt
                 if (model.checkSDT(sv.getSDT())) {
                     view.getTxt_SDT().setBorder(nhapSai);
-                    return;
                 }
                 //check trùng mã
                 if (model.checkTrungMa(sv.getMaSV())) {
                     view.getTxt_msv().setBorder(nhapSai);
+                }
+
+                if (model.checkEmail(sv.getEmail())) {
+                    view.getTxt_Email().setBorder(nhapSai);
+
+                }
+
+                if (model.checkSDT(sv.getSDT()) || model.checkTrungMa(sv.getMaSV()) || model.checkEmail(sv.getEmail())) {
                     return;
                 }
-                // thêm sinh viên
+                // thêm sinh viên vào database
+                setSuccess(nhapDung);
                 model.add(sv);
                 JOptionPane.showMessageDialog(null, "         Thêm thành công", "", JOptionPane.DEFAULT_OPTION, DocIMG.greenTick());
 
@@ -105,10 +113,10 @@ public class QLSVController {
                 return;
             }
 
-            LinkedList<SinhVien> mhs = new LinkedList<>();
+            LinkedList<SinhVien> dssv = new LinkedList<>();
             try {
                 //tìm mã trong database 
-                mhs = model.find(maCanTim, f);
+                dssv = model.find(maCanTim, f);
             } catch (SQLException ex) {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -118,7 +126,7 @@ public class QLSVController {
                 return;
             }
             //hiện dữ liêu tìm kiếm trên table
-            ShowTable(mhs);
+            ShowTable(dssv);
         });
 
         //Nút xem tất cả dữ liệu trong database
@@ -126,7 +134,7 @@ public class QLSVController {
             ShowTable(model.getDssv());
         });
 
-        //Nút sửa
+        //Nút sửa trong bảng jframe
         view.getBtn_Sua().addActionListener((x) -> {
             //Lấy vị trí dòng đang chọn
             int row = view.getTb_SV().getSelectedRow();
@@ -153,6 +161,7 @@ public class QLSVController {
                 } else {
                     view.getGrGioiTinh().setSelected(view.getCheckNu().getModel(), true);
                 }
+                view.getTxt_msv().setEnabled(false);
                 view.getTb_SV().clearSelection();
             } else {
                 SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
@@ -161,9 +170,13 @@ public class QLSVController {
                 } catch (SQLException ex) {
                     Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                setSuccess(nhapDung);
+                view.getTxt_msv().setEnabled(true);
                 ShowTable(model.getDssv());
             }
         });
+
+        //Nút xóa
         view.getBtn_Xoa().addActionListener((e) -> {
             int[] rows = view.getTb_SV().getSelectedRows();
             if (rows != null) {
@@ -196,7 +209,7 @@ public class QLSVController {
         view.getTb_SV().setModel(table);
     }
 
-    //Thêm sinh viên
+    //Thêm sinh viên vào bảng
     public SinhVien AddSV(QLSVView view) throws SQLException {
 
         String maSV = view.getTxt_msv().getText();
@@ -238,13 +251,15 @@ public class QLSVController {
         }
         if (khoa.equals("")) {
             view.getTxt_Khoa().setBorder(nhapSai);
+        } else {
+            view.getTxt_Khoa().setBorder(nhapDung);
         }
         if (lop.equals("")) {
             view.getTxt_Lop().setBorder(nhapSai);
         } else {
             view.getTxt_Lop().setBorder(nhapDung);
         }
-        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11)) {
+        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11)||model.checkSDT(sDT)) {
             view.getTxt_SDT().setBorder(nhapSai);
         } else {
             view.getTxt_SDT().setBorder(nhapDung);
@@ -255,7 +270,6 @@ public class QLSVController {
         boolean bl3 = !diaChi.equals("") && !khoa.equals("") && !lop.equals("") && validate_email(email);
         if (bl1 && bl2 && bl3) {
             Date d = new Date(ngaySinh);
-            setSuccess(nhapDung);
             return new SinhVien(maSV, tenSV, gioiTinh, d, khoa, lop, email, sDT, diaChi);
         } else {
             return null;
@@ -273,6 +287,7 @@ public class QLSVController {
         view.getTxt_SDT().setText("");
         view.getTxt_Tim().setText("");
         view.getTxt_hoTen().setText("");
+
         view.getTxt_msv().setBorder(b);
         view.getTxt_DC().setBorder(b);
         view.getTxt_Email().setBorder(b);
@@ -318,3 +333,7 @@ public class QLSVController {
         QLSVController qlsvController = new QLSVController(new QLSVModel(), new QLSVView());
     }
 }
+/**
+ * Chưa tối ưu Chức năng sửa trùng email,sđt,khác mã
+ *
+ */
