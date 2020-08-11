@@ -15,7 +15,12 @@ public class Ong {
     public static int PI = 65;
     public static int TRONG = 100;// khoang trong giua 2 ong nuoc
     private int x;//what the hell
-
+    
+    public void reset(){
+        caoMax = 400;
+        rongMax = 1000;
+    }
+    
     private static boolean sieuNangLuc = false;
 
     public static boolean isSieuNangLuc() {

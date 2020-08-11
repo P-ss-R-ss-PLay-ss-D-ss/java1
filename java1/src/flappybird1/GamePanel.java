@@ -83,55 +83,53 @@ public class GamePanel extends JPanel implements Runnable {
     @Override
     public void run() {
 
-        do {
-            // 1 vong lap khong bao gio dung
-            while (!ketThuc) {
+        // 1 vong lap khong bao gio dung
+        while (!ketThuc) {
 
-                repaint(); // goi lai paint
+            repaint(); // goi lai paint
 
-                ongnuoc1.giamX(); // goi den phuong thuc giamX cua class OngNuoc
-                ongnuoc2.giamX();
-                ongnuoc3.giamX();
-                ongnuoc4.giamX();
+            ongnuoc1.giamX(); // goi den phuong thuc giamX cua class OngNuoc
+            ongnuoc2.giamX();
+            ongnuoc3.giamX();
+            ongnuoc4.giamX();
 
-                try {
-                    Thread.sleep(10); // chuong trinh dung lai 20 ms
-                } catch (InterruptedException e) {
-                }
-
-                // goi den phuong thuc .... cua class OngNuoc
-                if (ongnuoc1.laplaiX()) {
-                    xuathien++;
-                }
-
-                ongnuoc2.laplaiX();
-                ongnuoc3.laplaiX();
-                ongnuoc4.laplaiX();
-                if (xuathien >= 2) {
-                    ConMoi.xuatHien(ongnuoc1);
-                }
-
-                if (chet() == true && bl1) {
-                    ketThuc = true;
-                    try {
-                        threadT.wait();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-
-                if (chet() == true) {
-                    bl1 = true;
-                }
-
-                conchimT.tangY(); // con chim tu roi xuong dat chet
-
-                quaOngTangDiem(conchimT, ongnuoc1);
-                quaOngTangDiem(conchimT, ongnuoc2);
-                quaOngTangDiem(conchimT, ongnuoc3);
-                quaOngTangDiem(conchimT, ongnuoc4);
+            try {
+                Thread.sleep(10); // chuong trinh dung lai 20 ms
+            } catch (InterruptedException e) {
             }
-        } while (ketThuc);
+
+            // goi den phuong thuc .... cua class OngNuoc
+            if (ongnuoc1.laplaiX()) {
+                xuathien++;
+            }
+
+            ongnuoc2.laplaiX();
+            ongnuoc3.laplaiX();
+            ongnuoc4.laplaiX();
+            if (xuathien >= 2) {
+                ConMoi.xuatHien(ongnuoc1);
+            }
+
+            if (chet() == true && bl1) {
+                ketThuc = true;
+//                try {
+//                    threadT.wait();
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(GamePanel.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+            }
+
+            if (chet() == true) {
+                bl1 = true;
+            }
+
+            conchimT.tangY(); // con chim tu roi xuong dat chet
+
+            quaOngTangDiem(conchimT, ongnuoc1);
+            quaOngTangDiem(conchimT, ongnuoc2);
+            quaOngTangDiem(conchimT, ongnuoc3);
+            quaOngTangDiem(conchimT, ongnuoc4);
+        }
 
     }
 

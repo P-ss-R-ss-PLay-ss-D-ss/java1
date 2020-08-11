@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 public class QLSVController {
@@ -70,6 +71,8 @@ public class QLSVController {
                 }
                 // thêm sinh viên
                 model.add(sv);
+                JOptionPane.showMessageDialog(null, "         Thêm thành công", "", JOptionPane.DEFAULT_OPTION, DocIMG.greenTick());
+
                 //hiện dữ liệu trên bảng
                 ShowTable(model.getDssv());
             } catch (SQLException ex) {
@@ -98,6 +101,7 @@ public class QLSVController {
             String maCanTim = view.getTxt_Tim().getText();
             // Mã rỗng
             if (maCanTim.equals("")) {
+                JOptionPane.showMessageDialog(null, "               Nhập mã", "", JOptionPane.DEFAULT_OPTION, DocIMG.error());
                 return;
             }
 
@@ -110,17 +114,18 @@ public class QLSVController {
             }
             //Danh sách rỗng
             if (mhs.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "               Không tìm thấy", "", JOptionPane.DEFAULT_OPTION, DocIMG.error());
                 return;
             }
             //hiện dữ liêu tìm kiếm trên table
             ShowTable(mhs);
         });
-        
+
         //Nút xem tất cả dữ liệu trong database
         view.getBtnXemTatCa().addActionListener((x) -> {
             ShowTable(model.getDssv());
         });
-        
+
         //Nút sửa
         view.getBtn_Sua().addActionListener((x) -> {
             //Lấy vị trí dòng đang chọn
@@ -160,10 +165,12 @@ public class QLSVController {
             }
         });
         view.getBtn_Xoa().addActionListener((e) -> {
-            int row = view.getTb_SV().getSelectedRow();
-            if (row != -1) {
+            int[] rows = view.getTb_SV().getSelectedRows();
+            if (rows != null) {
                 try {
-                    model.remove(view.getTb_SV().getValueAt(row, 0).toString());
+                    for (int row : rows) {
+                        model.remove(view.getTb_SV().getValueAt(row, 0).toString());
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -191,7 +198,7 @@ public class QLSVController {
 
     //Thêm sinh viên
     public SinhVien AddSV(QLSVView view) throws SQLException {
-        
+
         String maSV = view.getTxt_msv().getText();
         String tenSV = view.getTxt_hoTen().getText();
         String gioiTinh = view.isGioiTinhNam() ? "Nam" : "Nữ";
@@ -254,7 +261,7 @@ public class QLSVController {
             return null;
         }
     }
-    
+
     //chỉnh lại bình thường khi thêm thành công
     private void setSuccess(Border b) {
         view.getTxt_msv().setText("");
@@ -276,27 +283,27 @@ public class QLSVController {
         view.getTxt_Tim().setBorder(b);
         view.getTxt_hoTen().setBorder(b);
     }
-    
+
     //Định dạng chuỗi số điện thoại
     private static final Pattern VALID_SDT_REGEX
             = Pattern.compile("^[0-9]+$", Pattern.CASE_INSENSITIVE);
-    
+
     //Định dạng chuỗi email
     private static final Pattern VALID_EMAIL_REGEX
             = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-    
+
     //check email
     public static boolean validate_email(String emailStr) {
         Matcher matcher = VALID_EMAIL_REGEX.matcher(emailStr);
         return matcher.find();
     }
-    
+
     //check số điện thoại
     public static boolean validate_SDT(String sDT) {
         Matcher matcher = VALID_SDT_REGEX.matcher(sDT);
         return matcher.find();
     }
-    
+
     //check ngày sinh
     public static boolean checkNgaySinh(String ngaySinh) {
         try {
