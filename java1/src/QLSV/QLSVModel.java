@@ -48,7 +48,7 @@ public class QLSVModel {
         return svs;
     }
 
-    //thêm sinh viên
+    //thêm sinh viên vào database
     public int add(SinhVien sinhVien) throws SQLException {
         String id = sinhVien.getMaSV();
         String name = sinhVien.getHoTen();
@@ -60,7 +60,9 @@ public class QLSVModel {
         String sdt = sinhVien.getSDT();
         String diaChi = sinhVien.getDiaChi();
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-        String sql = "insert into sinhvien values('" + id + "',N'" + name + "','" + gioiTinh + "','" + ft.format(d) + "','" + khoa + "','" + lop + "','" + email + "','" + sdt + "',N'" + diaChi + "')";
+        String sql = "insert into sinhvien values('" + id + "','" + name + "','" 
+                + gioiTinh + "','" + ft.format(d) + "','" + khoa + "','" + lop 
+                + "','" + email + "','" + sdt + "','" + diaChi + "')";
         return DataBaseUtil.setData(sql);
     }
 
@@ -118,17 +120,16 @@ public class QLSVModel {
             String diaChi = rs.getString(9);
             dssvTemp.add(new SinhVien(id, hoten, gioiTinh, d, khoa, lop, email, sdt, diaChi));
         }
-
         return dssvTemp;
     }
 
-    //Xoá sinh viên theo mã
+    //Xoá sinh viên theo mã trên database
     public int remove(String maSV) throws SQLException {
         String sql = "delete from sinhvien where masv='" + maSV + "'";
         return DataBaseUtil.setData(sql);
     }
 
-    //Cập nhật sinh viên 
+    //Cập nhật sinh viên theo mã sinh viên truyền vào trên database
     public int update(SinhVien sv) throws SQLException {
         String sql;
         if (checkTrungMa(sv.getMaSV())) {
