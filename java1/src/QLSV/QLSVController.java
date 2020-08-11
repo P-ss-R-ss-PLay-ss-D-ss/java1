@@ -121,7 +121,7 @@ public class QLSVController {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
             }
             //Danh sách rỗng
-            if (mhs.isEmpty()) {
+            if (dssv.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "               Không tìm thấy", "", JOptionPane.DEFAULT_OPTION, DocIMG.error());
                 return;
             }
@@ -166,11 +166,35 @@ public class QLSVController {
             } else {
                 SimpleDateFormat ft = new SimpleDateFormat("dd-MM-yyyy");
                 try {
+                    SinhVien s1 = model.find(view.getTxt_msv().getText(), QLSVModel.find.ma).getFirst();
+                    SinhVien s2 = AddSV(view);
+                    boolean bl1 = true;
+                    boolean bl2 = true;
+
+                    view.getTxt_msv().setBorder(nhapDung);
+
+                    if ((bl1 = model.checkEmail(s2.getEmail()) && !s2.getEmail().equals(s1.getEmail()))) {
+                        view.getTxt_Email().setBorder(nhapSai);
+                    } else {
+                        view.getTxt_Email().setBorder(nhapDung);
+                    }
+                    if ((bl2 = model.checkSDT(s2.getSDT()) && !s2.getSDT().equals(s1.getSDT()))) {
+                        view.getTxt_SDT().setBorder(nhapSai);
+                    } else {
+                        view.getTxt_SDT().setBorder(nhapDung);
+                    }
+
+                    if (bl2 || bl1) {
+                        return;
+                    }
+
                     model.update(AddSV(view));
                 } catch (SQLException ex) {
                     Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 setSuccess(nhapDung);
+                JOptionPane.showMessageDialog(null, "               Sửa thành công", "", JOptionPane.DEFAULT_OPTION, DocIMG.greenTick());
+
                 view.getTxt_msv().setEnabled(true);
                 ShowTable(model.getDssv());
             }
@@ -184,6 +208,7 @@ public class QLSVController {
                     for (int row : rows) {
                         model.remove(view.getTb_SV().getValueAt(row, 0).toString());
                     }
+                    JOptionPane.showMessageDialog(null, "               Xoá thành công", "", JOptionPane.DEFAULT_OPTION, DocIMG.greenTick());
                 } catch (SQLException ex) {
                     Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -259,7 +284,7 @@ public class QLSVController {
         } else {
             view.getTxt_Lop().setBorder(nhapDung);
         }
-        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11)||model.checkSDT(sDT)) {
+        if (!validate_SDT(sDT) || (sDT.length() != 10 && sDT.length() != 11) || model.checkSDT(sDT)) {
             view.getTxt_SDT().setBorder(nhapSai);
         } else {
             view.getTxt_SDT().setBorder(nhapDung);
