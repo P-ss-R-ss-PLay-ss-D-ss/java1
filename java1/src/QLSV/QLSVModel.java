@@ -134,7 +134,10 @@ public class QLSVModel {
         String sql;
         if (checkTrungMa(sv.getMaSV())) {
             SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-            sql = String.format("update sinhvien set masv='%s',hoten='%s',gioitinh='%s',ngaysinh='%s',khoa='%s',lop='%s',email='%s',sdt='%s',diachi='%s' where masv='%s'", sv.getMaSV(), sv.getHoTen(), sv.getGioiTinh(), ft.format(sv.getNgaySinh()), sv.getKhoa(), sv.getLop(), sv.getEmail(), sv.getSDT(), sv.getDiaChi(), sv.getMaSV());
+            sql = String.format("update sinhvien set masv='%s',hoten='%s',gioitinh='%s',ngaysinh='%s',khoa='%s'"
+                    + ",lop='%s',email='%s',sdt='%s',diachi='%s' where masv='%s'", sv.getMaSV(), sv.getHoTen(), 
+                    sv.getGioiTinh(), ft.format(sv.getNgaySinh()), sv.getKhoa(), sv.getLop(), sv.getEmail(), 
+                    sv.getSDT(), sv.getDiaChi(), sv.getMaSV());
             return DataBaseUtil.setData(sql);
         }
         return -1;

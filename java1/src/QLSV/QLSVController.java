@@ -121,7 +121,7 @@ public class QLSVController {
                 Logger.getLogger(QLSVController.class.getName()).log(Level.SEVERE, null, ex);
             }
             //Danh sách rỗng
-            if (mhs.isEmpty()) {
+            if (dssv.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "               Không tìm thấy", "", JOptionPane.DEFAULT_OPTION, DocIMG.error());
                 return;
             }
